@@ -1,4 +1,4 @@
-function sessioninfo = get_sessionsinfo(file_path, params)
+function sessioninfo = get_sessioninfo(file_path, params)
 %GET_SESSIONSINFO
 
 % /Users/mark/Desktop/YM_synch_prestim_files.mat
@@ -11,4 +11,5 @@ path = file_path; % path to file (with file name)
 file_path(strfind(file_path, '.dat')-3:1:strfind(file_path, '.dat')-1);
 record = []; % type of file recorded (rest1, pre_stim, dur_post_stim, rest2)
 
+% not sure whether we need this function...
 

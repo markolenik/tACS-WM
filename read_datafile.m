@@ -1,18 +1,20 @@
-function raw_data = read_datafile(file_path, params)
+function raw_data = read_datafile(log_path, file_path, params)
 %READ_DATAFILE Read data from .dat-file and assign channel labels.
 %
 % SYNOPSIS
 %   raw_data = read_datafile(file_path)
 %
 % INPUT
-%   file_path:  path to the file to be read
+%   (string) log_path:   path to log file
+%   (string) file_path:  path to the file to be read
+%   (string) params:     params file
 %
 % OUTPUT
-%   raw_data:   loaded data with channel labels.
+%   (struct) raw_data:   loaded data with channel labels.
 %
 
 cfg = [];
-cfg.filepath = file_path;
+cfg.dataset = file_path;
 cfg.trialfun = 'trialfun_param_events'; % one trial, all events
 % determine the type of recording (i.e. rest1, prestim etc...)
 record_code = file_path(strfind(file_path, 'R0'):1:strfind(file_path, 'R0')+2);
@@ -22,7 +24,7 @@ switch(record_code)
     case 'R02'
         record = 'pre_stim';
     case 'R03'
-        record = 'dur_post_stim';
+        record = 'dur_post_stim';p
     case 'R04'
         record = 'rest2';
     otherwise
@@ -32,12 +34,12 @@ cfg.record = record;
 cfg.params = params;
 
 cfg = ft_definetrial(cfg);
-write_to_log(session, ['succesfully read events from ', file_path]);
+write_to_log(log_path, ['succesfully read events from ', file_path]);
 cfg.continuous = 'yes';
 
 
 raw_data = ft_preprocessing(cfg);
-write_to_log(session, ['succesfully read data from ', file_path]);
+write_to_log(log_path, ['succesfully read data from ', file_path]);
 
 % set channel names in data
 raw_data.label = {'Fp1','Fp2', ...
@@ -58,7 +60,5 @@ raw_data.label = {'Fp1','Fp2', ...
     'EOG', ...
     'APBleft', 'APBright', ...
     ''};
-
-
 
 end

@@ -14,7 +14,7 @@ function [trl, event] = trialfun_param_events(cfg);
 %
 
 % read the header information without events from the data
-hdr   = ft_read_header(cfg.filepath);
+hdr   = ft_read_header(cfg.dataset);
 
 % record: prestim, dur/poststim
 record = cfg.record;

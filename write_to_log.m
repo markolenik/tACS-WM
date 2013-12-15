@@ -1,8 +1,9 @@
-function [] = write_to_log( log_path, log_event )
-%WRITE_TO_LOG appends timestamped event to logfile. Creates or modifies log
+function [] = write_to_log(log_path, log_event)
+%WRITE_TO_LOG appends timestamped event to logfile. Creates or modifies
+%   log. Function to be called within the main script
 %
 % SYNOPSIS
-%   [] = write_to_log( session_folder, log_event )
+%   [] = write_to_log(log_path, log_event)
 %
 % INPUT
 %   (string)  log_path: path to log folder in session folder

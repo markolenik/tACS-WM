@@ -6,7 +6,7 @@ function [trl, event] = trialfun_param_events(cfg);
 %
 % INPUT
 %   (struct) cfg: The following fields need to be specified:
-%   cfg.dataset, cfg.record, cfg.params
+%   cfg.filepath, cfg.record, cfg.params
 %
 % OUTPUT
 %   (matrix) trl: matrix with trial definition (in our case single trial)
@@ -14,7 +14,7 @@ function [trl, event] = trialfun_param_events(cfg);
 %
 
 % read the header information without events from the data
-hdr   = ft_read_header(cfg.dataset);
+hdr   = ft_read_header(cfg.filepath);
 
 % record: prestim, dur/poststim
 record = cfg.record;

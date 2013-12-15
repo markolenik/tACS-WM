@@ -1,6 +1,7 @@
 function [stat] = WPLI(data)
 %WPLI
 
+%osme sf
 cfg = [];
 cfg.method = 'mtmconvol';
 cfg.output = 'powandcsd';

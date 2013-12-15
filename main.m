@@ -6,7 +6,7 @@
 % 
 % AUSWERTUNG PRO SESSION:
 % loop über alle sessions (als dateiordner)
-%   - session-ordner auf vollständigkeit prüfen                            initialize.m (done(alex) - ungetestet)
+%   - session-ordner auf vollständigkeit prüfen                            initialize.m (done(alex) - getestest)
 %   - 'loop' über beide EEG-Aufnahmen (pre_stim und dur_post_stim)         prepare_datafiles.m (in progress(alex) - ungetestet)
 %       - ft_definetrial (1 trial, events)
 %       - filtern                                                          filtEEG.m (done?(mark) - ungetestet)
@@ -20,3 +20,4 @@
 %   - EEG-files appenden                                                             
 %   - WPLI                                                                 WPLI.m (beta-done(mark) - test eher schlecht)
 %   - ANOVA                                                                
+%

@@ -19,7 +19,7 @@ hdr   = ft_read_header(cfg.dataset);
 % record: prestim, dur/poststim
 record = cfg.record;
 
-% sampling rate of EEG recording
+% sampling rate of EEG recording in ms
 FS = hdr.Fs;
 
 params = cfg.params;
@@ -33,47 +33,62 @@ event = struct('type',{},'sample',{},'value',{},'offset',{},'duration',{});
 if(strcmp(record, 'pre_stim'))
     analyze_params(1, 50);
 elseif(strcmp(record, 'dur_post_stim'))
-    analyze_params(51, 200); % so ist gleich wie untere beide oder?
+    analyze_params(51, 200);
+    %NOTE: so ist gleich wie untere beide oder?
     %     analyze_params(51, 150);
     %     analyze_params(151, 200);
+else
+    error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
 end
+
 
 % Continuous data, 1 trial per recording (pre, dur and post)
 if(strcmp(cfg.record, 'dur_post_stim'))
     end_dur_stim = params.TimeStamps.TaskDurStim.End;
     trl = [1, adjust_time(end_dur_stim), 0; ...
         adjust_time(end_dur_stim+1), hdr.nSamples, 0];
+    %NOTE: Why are we adjusting time here but not in 'else' case?
 else
     trl = [1, hdr.nSamples, 0];
 end
 
-% trl = [1 hdr.nSamples 0];
+trl = [1 hdr.nSamples 0];
 
 %% helper functions for event creation
 
-% adjust time by end-markers
-    function eeg_timestamp = adjust_time(param_timestamp)
+%   Map timepoint from DLDT to a sample in EEG data.
+%   We had a time asynchrony between behavioural recordings (DLDT trials) 
+%   and EEG data. EEG recordings were started first. Then, with an
+%   arbitrary delay we started the DLDT. Both DLDT and EEG recordings were 
+%   stopped simultaneously. WE SHIFT THE TIMES BY THE DIFFERENCE IN BOTH
+%   recording lengths (in samples).
+    function shifted_sample = adjust_time(param_timestamp)
         % INPUT
-        %   (number) param_timestamp: time point to shift
+        %   (number) param_timestamp: time point from task to shift
         %
         % OUPUT
-        %   (number) eeg_timestamp: shifted time point
+        %   (number) shifted_sample: shifted sample
         %
         eeg_end = hdr.nSamples;
+        % map time to samples
         if(strcmp(cfg.record, 'dur_post_stim'))
-            params_end = params.TimeStamps.Experiment.End * FS; % milliseconds
+            params_end = params.TimeStamps.Experiment.End * FS;
+        elseif(strcmp(cfg.record, 'pre_stim'))
+            params_end = params.TimeStamps.TaskPreStim.End * FS;
         else
-            params_end = params.TimeStamps.TaskPreStim.End * FS; % milliseconds
+            error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
         end
         
-        move_by = eeg_end - params_end;
+        % find the difference in samples between both durations
+        move_by_samples = eeg_end - params_end;
         
+        % shift EEG by difference in samples into future
         % no need for anything more exact than a ms
-        eeg_timestamp = floor( (param_timestamp * FS) + move_by );
+        shifted_sample = floor( (param_timestamp * FS) + move_by_samples );
     end
 
 % create events for chosen tasks
-% task: starts at fixation.start, ends at probe.end
+% task: starts at fixation.start, ends at probe.end, represents one trial
     function analyze_params(a, b)
         % INPUT
         %   (number) a,b: lower and upper trial

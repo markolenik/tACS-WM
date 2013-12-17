@@ -25,7 +25,7 @@ switch(record_code)
     case 'R02'
         record = 'pre_stim';
     case 'R03'
-        record = 'dur_post_stim';p
+        record = 'dur_post_stim';
     case 'R04'
         record = 'rest2';
     otherwise

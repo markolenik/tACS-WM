@@ -1,4 +1,4 @@
-function [params, rest1_eeg, pre_stim_eeg, post_dur_stim_eeg, rest2_eeg,...
+function [params_path, rest1_eeg_path, pre_stim_eeg_path, post_dur_stim_eeg_path, rest2_eeg,...
     log_path] = initialize(session_path)
 %INITIALIZE Initializes analysis of a session.
 % Return params and eeg file-paths when done succesfully. Additionally, a
@@ -9,23 +9,21 @@ function [params, rest1_eeg, pre_stim_eeg, post_dur_stim_eeg, rest2_eeg,...
 %   [params, rest1_eeg, pre_stim_eeg, post_dur_stim_eeg, rest2_eeg, log_path] = initialize(session_folder)
 %
 % INPUT
-%   (string)  session_path: path to folder that contains the parameter file (as .mat) and
-%                             all EEG files (rest1, pre_stim, post_stim,
-%                             rest2 at .dat)
+%   (string)  session_path: path to folder that contains the parameter file
+%   (as .mat) and all EEG files (rest1, pre_stim, post_stim, rest2 at .dat)
 %
 % OUPUT
-%TODO: add path again to variable names
-%   (string)  params:               path to params file
-%   (string)  rest1_eeg:            path to rest 1 EEG file
-%   (string)  pre_stim_eeg:         path to pre-stim EEG file
-%   (string)  post_dur_stim_eeg:    path to post/during-stim EEG file
-%   (string)  rest2_eeg:            path to rest 2 EEG file
-%   (string)  log_path              path to logfile
+%   (string)  params_path:               path to params file
+%   (string)  rest1_eeg_path:            path to rest 1 EEG file
+%   (string)  pre_stim_eeg_path:         path to pre-stim EEG file
+%   (string)  post_dur_stim_eeg_path:    path to post/during-stim EEG file
+%   (string)  rest2_eeg_path:            path to rest 2 EEG file
+%   (string)  log_path                   path to logfile
 
 % get subject ID
 folder      = session_path(strfind(session_path, 'subject_'):end);
 localize    = strfind(folder,'_');
-subject     = folder(localize(1)+1:localize(2)-1);
+subjectID     = folder(localize(1)+1:localize(2)-1);
 log_path    = [session_path filesep 'log'];
 
 condition   = '';
@@ -45,22 +43,22 @@ end
 
 % the following three files are essential to analyse the session. their
 % filenames consist of subject and condition as follows
-params              = [session_path filesep 'subject' '_' subject,'_',condition,'.mat'];
-rest1_eeg           = [session_path filesep 'subject' '_' subject,'_',condition,'S001R01.dat'];
-pre_stim_eeg        = [session_path filesep 'subject' '_' subject,'_',condition,'S001R02.dat'];
-post_dur_stim_eeg   = [session_path filesep 'subject' '_' subject,'_',condition,'S001R03.dat'];
-rest2_eeg           = [session_path filesep 'subject' '_' subject,'_',condition,'S001R04.dat'];
+params_path              = [session_path filesep 'subject' '_' subjectID,'_',condition,'.mat'];
+rest1_eeg_path           = [session_path filesep 'subject' '_' subjectID,'_',condition,'S001R01.dat'];
+pre_stim_eeg_path        = [session_path filesep 'subject' '_' subjectID,'_',condition,'S001R02.dat'];
+post_dur_stim_eeg_path   = [session_path filesep 'subject' '_' subjectID,'_',condition,'S001R03.dat'];
+rest2_eeg           = [session_path filesep 'subject' '_' subjectID,'_',condition,'S001R04.dat'];
 
 % check whether all objects exist
-if(exist(params, 'file') && exist(pre_stim_eeg, 'file') && ...
-        exist(post_dur_stim_eeg, 'file') && exist(rest1_eeg, 'file') ...
+if(exist(params_path, 'file') && exist(pre_stim_eeg_path, 'file') && ...
+        exist(post_dur_stim_eeg_path, 'file') && exist(rest1_eeg_path, 'file') ...
         && exist(rest2_eeg, 'file'))
     % create log folder
     mkdir(log_path);
-    write_to_log(log_path, ['successfully initialized session ', '"', condition, '"', ' for subject ', '"', subject, '"']);
+    write_to_log(log_path, ['successfully initialized session ', '"', condition, '"', ' for subject ', '"', subjectID, '"']);
     success = true;
 else
-    write_to_log(log_path, ['files missing in session ', '"', condition, '"', ' for subject ', '"', subject, '"']);
+    write_to_log(log_path, ['files missing in session ', '"', condition, '"', ' for subject ', '"', subjectID, '"']);
     success = false;
 
 % now that everything is in place, the preprocessing can begin

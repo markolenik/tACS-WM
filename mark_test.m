@@ -10,3 +10,7 @@ session_path = '/Users/mark/Dropbox/tACS_project_matlab_code/exampleData/subject
     initialize(session_path);
 load(params);
 raw_data = read_datafile(log_path, pre_stim_eeg, params);
+
+%%
+cfg.channel = {'F3', 'P3', 'EOG'};
+cfg = ft_databrowser(cfg, raw_data);

@@ -13,6 +13,7 @@ function raw_data = read_datafile(log_path, file_path, params)
 %   (struct) raw_data:   loaded data with channel labels.
 %
 
+
 cfg = [];
 cfg.dataset = file_path;
 cfg.trialfun = 'trialfun_param_events'; % one trial, all events
@@ -41,6 +42,7 @@ cfg.continuous = 'yes';
 raw_data = ft_preprocessing(cfg);
 write_to_log(log_path, ['succesfully read data from ', file_path]);
 
+%NOTE: Are the channel labels correct?
 % set channel names in data
 raw_data.label = {'Fp1','Fp2', ...
     'F7','F3','Fz','F4','F8', ...

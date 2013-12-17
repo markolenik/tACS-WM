@@ -62,10 +62,8 @@ end
         eeg_end = hdr.nSamples;
         if(strcmp(cfg.record, 'dur_post_stim'))
             params_end = params.TimeStamps.Experiment.End * FS; % milliseconds
-        elseif(strcmp(cfg.record, 'pre_stim'))
-            params_end = params.TimeStamps.TaskPreStim.End * FS; % milliseconds
         else
-            error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
+            params_end = params.TimeStamps.TaskPreStim.End * FS; % milliseconds
         end
         
         move_by = eeg_end - params_end;
@@ -75,7 +73,7 @@ end
     end
 
 % create events for chosen tasks
-% task: starts at fixation.start, ends at probe.end, represents one trial
+% task: starts at fixation.start, ends at probe.end
     function analyze_params(a, b)
         % INPUT
         %   (number) a,b: lower and upper trial

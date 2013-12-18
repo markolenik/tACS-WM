@@ -44,9 +44,15 @@ end
 
 % Continuous data, 1 trial per recording (pre, dur and post)
 if(strcmp(cfg.record, 'dur_post_stim'))
-    end_dur_stim = params.TimeStamps.TaskDurStim.End;
-    trl = [1, adjust_time(end_dur_stim), 0; ...
-        adjust_time(end_dur_stim+1), hdr.nSamples, 0];
+    start_dur_stim = params.TimeStamps.TaskDurStim.Start;
+    end_post_stim = params.TimeStamps.TaskDurStim.End;
+    %NOTE: Why is trl starting with sample 1? Shouldn't it start with
+    %sample adjust_time(params.TimeStamps.TaskDurStim.Start)?
+    
+    trl = [adjust_time(start_dur_stim), adjust_time(end_post_stim),0];
+    
+    trl = [adjust_time(s, adjust_time(end_post_stim), 0; ...
+        adjust_time(end_post_stim+1), hdr.nSamples, 0];
     %NOTE: Why are we adjusting time here but not in 'else' case?
 else
     trl = [1, hdr.nSamples, 0];
@@ -61,7 +67,7 @@ trl = [1 hdr.nSamples 0];
 %   and EEG data. EEG recordings were started first. Then, with an
 %   arbitrary delay we started the DLDT. Both DLDT and EEG recordings were 
 %   stopped simultaneously. WE SHIFT THE TIMES BY THE DIFFERENCE IN BOTH
-%   recording lengths (in samples).
+%   recording lengths.
     function shifted_sample = adjust_time(param_timestamp)
         % INPUT
         %   (number) param_timestamp: time point from task to shift

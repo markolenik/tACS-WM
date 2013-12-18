@@ -1,7 +1,8 @@
 % function mark_test
 clear all,
 
-addpath(genpath('/Users/mark/Dropbox/tACS_project_matlab_code/fieldtrip-20130901'));
+addpath('/Users/mark/Dropbox/tACS_project_matlab_code/fieldtrip-20130901');
+ft_defaults;
 
 
 session_path = '/Users/mark/Dropbox/tACS_project_matlab_code/exampleData/subject_BL_desynch001';

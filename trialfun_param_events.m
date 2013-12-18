@@ -44,24 +44,23 @@ end
 
 % Continuous data, 1 trial per recording (pre, dur and post)
 if(strcmp(cfg.record, 'dur_post_stim'))
-    end_dur_stim = params.TimeStamps.TaskDurStim.End;
-    %NOTE: Why is trl starting with sample 1? Shouldn't it start with
-    %sample adjust_time(params.TimeStamps.TaskDurStim.Start)?
-    trl = [1, adjust_time(end_dur_stim), 0; ...
-        adjust_time(end_dur_stim+1), hdr.nSamples, 0];
-    %NOTE: Why are we adjusting time here but not in 'else' case?
+    start_dur_stim = params.TimeStamps.TaskDurStim.Start;
+    end_post_stim = params.TimeStamps.TaskPostStim.End;
+    trl = [adjust_time(start_dur_stim), adjust_time(end_post_stim),0];
+elseif(strcmp(cfg.record, 'pre_stim'))
+    start_pre_stim = params.TimeStamps.TaskPreStim.Start;
+    end_pre_stim = params.TimeStamps.TaskPreStim.End;
+    trl = [adjust_time(start_pre_stim), adjust_time(end_pre_stim), 0];
 else
-    trl = [1, hdr.nSamples, 0];
+    error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
 end
-
-trl = [1 hdr.nSamples 0];
 
 %% helper functions for event creation
 
 %   Map timepoint from DLDT to a sample in EEG data.
-%   We had a time asynchrony between behavioural recordings (DLDT trials) 
+%   We had a time asynchrony between behavioural recordings (DLDT trials)
 %   and EEG data. EEG recordings were started first. Then, with an
-%   arbitrary delay we started the DLDT. Both DLDT and EEG recordings were 
+%   arbitrary delay we started the DLDT. Both DLDT and EEG recordings were
 %   stopped simultaneously. WE SHIFT THE TIMES BY THE DIFFERENCE IN BOTH
 %   recording lengths.
     function shifted_sample = adjust_time(param_timestamp)

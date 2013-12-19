@@ -34,23 +34,21 @@ if(strcmp(record, 'pre_stim'))
     analyze_params(1, 50);
 elseif(strcmp(record, 'dur_post_stim'))
     analyze_params(51, 200);
-    %NOTE: so ist gleich wie untere beide oder?
-    %     analyze_params(51, 150);
-    %     analyze_params(151, 200);
 else
     error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
 end
 
 
+%FIXME: Bug somewhere here
 % Continuous data, 1 trial per recording (pre, dur and post)
 if(strcmp(cfg.record, 'dur_post_stim'))
-    start_dur_stim = params.TimeStamps.TaskDurStim.Start;
-    end_post_stim = params.TimeStamps.TaskPostStim.End;
-    trl = [adjust_time(start_dur_stim), adjust_time(end_post_stim),0];
+    dur_stim_start = params.Task.Trial(51).Timing.TrialStart;
+    post_stim_end = params.Task.Trial(200).Timing.TrialEnd;
+    trl = [adjust_time(dur_stim_start), adjust_time(post_stim_end),0];
 elseif(strcmp(cfg.record, 'pre_stim'))
-    start_pre_stim = params.TimeStamps.TaskPreStim.Start;
-    end_pre_stim = params.TimeStamps.TaskPreStim.End;
-    trl = [adjust_time(start_pre_stim), adjust_time(end_pre_stim), 0];
+    pre_stim_start = params.TimeStamps.TaskPreStim.Start;
+    pre_stim_end = params.TimeStamps.TaskPreStim.End;
+    trl = [adjust_time(pre_stim_start), adjust_time(pre_stim_end), 0];
 else
     error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
 end

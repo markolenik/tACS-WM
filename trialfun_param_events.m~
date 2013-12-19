@@ -13,6 +13,8 @@ function [trl, event] = trialfun_param_events(cfg);
 %   (struct) event: definition of events
 %
 
+params = cfg.params;
+
 % read the header information without events from the data
 hdr   = ft_read_header(cfg.dataset);
 
@@ -22,7 +24,13 @@ record = cfg.record;
 % sampling rate of EEG recording in ms
 FS = hdr.Fs;
 
-params = cfg.params;
+% length of EEG data
+EEGlength = hdr.nSamples;
+prms_prestim_start = params.Task.Trial(1).Timing.TrialStart;
+prms_prestim_end = params.TimeStamps.TaskPreStim.End;
+prms_dursim_start = params.Trial(51).Timing.TrialStart;
+prms_du = params.TimeStamps.TaskPostStim.End - params.
+
 
 % event structure
 % sample: sample number where event starts
@@ -39,15 +47,16 @@ else
 end
 
 
+%FIXME: Bug somewhere here
 % Continuous data, 1 trial per recording (pre, dur and post)
 if(strcmp(cfg.record, 'dur_post_stim'))
-    start_dur_stim = params.Task.Trial(params.Task.TrialCount.PreStimTrials + 1);
-    end_post_stim = params.TimeStamps.TaskPostStim.End;
-    trl = [adjust_time(start_dur_stim), adjust_time(end_post_stim),0];
+    dur_stim_start = params.Task.Trial(51).Timing.TrialStart;
+    post_stim_end = params.TimeStamps.Experiment.End;
+    trl = [adjust_time(dur_stim_start), adjust_time(post_stim_end),0];
 elseif(strcmp(cfg.record, 'pre_stim'))
-    start_pre_stim = params.TimeStamps.TaskPreStim.Start;
-    end_pre_stim = params.TimeStamps.TaskPreStim.End;
-    trl = [adjust_time(start_pre_stim), adjust_time(end_pre_stim), 0];
+    pre_stim_start = params.Task.Trial(1).Timing.TrialStart;
+    pre_stim_end = params.TimeStamps.TaskPreStim.End;
+    trl = [adjust_time(pre_stim_start), adjust_time(pre_stim_end), 0];
 else
     error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
 end
@@ -67,9 +76,11 @@ end
         % OUPUT
         %   (number) shifted_sample: shifted sample
         %
-        eeg_end = hdr.nSamples;
+        
         % map time to samples
         if(strcmp(cfg.record, 'dur_post_stim'))
+            %Timestamp of synchronisation
+            %NOTE: The only time when we should use TimeStamps.
             params_end = params.TimeStamps.Experiment.End * FS;
         elseif(strcmp(cfg.record, 'pre_stim'))
             params_end = params.TimeStamps.TaskPreStim.End * FS;
@@ -78,7 +89,7 @@ end
         end
         
         % find the difference in samples between both durations
-        move_by_samples = eeg_end - params_end;
+        move_by_samples = EEGlength - params_end;
         
         % shift EEG by difference in samples into future
         % no need for anything more exact than a ms

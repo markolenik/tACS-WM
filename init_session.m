@@ -6,7 +6,11 @@ function [params_path, rest1_eeg_path, pre_stim_eeg_path, post_dur_stim_eeg_path
 % (filering etc.).
 %
 % SYNOPSIS
+<<<<<<< HEAD
 %   [params, rest1_eeg, pre_stim_eeg, post_dur_stim_eeg, rest2_eeg, log_path] = initialize(session_folder)
+=======
+%   [params, rest1_eeg, pre_stim_eeg, post_dur_stim_eeg, rest2_eeg, log_path] = init_session(session_folder)
+>>>>>>> test_trialfun
 %
 % INPUT
 %   (string)  session_path: path to folder that contains the parameter file

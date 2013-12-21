@@ -1,5 +1,6 @@
 % testing gen_simpleftsignal
 
+
 %% LOAD DATA
 % test on example data
 session_path = '/Users/mark/Dropbox/tACS_project_matlab_code/exampleData/subject_BL_desynch001';
@@ -12,9 +13,24 @@ raw_data_pre = read_datafile(log_path, pre_stim_eeg, params);
 raw_data_dur_post = read_datafile(log_path, post_dur_stim_eeg, params);
 
 %% CREATE TEST SIGNAL
+=======
+clear all,
+
+addpath('/Users/mark/Dropbox/tACS_project_matlab_code/fieldtrip-20130901');
+addpath(genpath('/Users/mark/Dropbox/tacs_project_matlab_code/functions'));
+ft_defaults;
+
+%%
+% testing on pre-stim data
+>>>>>>> test_trialfun
+
 
 fsample = params.Recording.SamplingRate;
+<<<<<<< HEAD
 trllength = params; % in s
+=======
+trllength = 10; % in s
+>>>>>>> test_trialfun
 numtrl = 1; % continuous data
 
 [simplesignal] = gen_simpleftsignal(fsample,trllength,...

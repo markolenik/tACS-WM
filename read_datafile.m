@@ -1,8 +1,8 @@
-function raw_data = read_datafile(log_path, file_path, params)
+function raw_data = read_datafile(file_path,params,log_path)
 %READ_DATAFILE Read data from .dat-file and assign channel labels.
 %
 % SYNOPSIS
-%   raw_data = read_datafile(file_path)
+%   raw_data = read_datafile(file_path,params,log_path)
 %
 % INPUT
 %   (string) log_path:   path to log file
@@ -13,6 +13,9 @@ function raw_data = read_datafile(log_path, file_path, params)
 %   (struct) raw_data:   loaded data with channel labels.
 %
 
+if(nargin<3)
+    log_path = pwd;
+end
 
 cfg = [];
 cfg.dataset = file_path;

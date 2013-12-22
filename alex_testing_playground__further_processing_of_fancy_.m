@@ -1,3 +1,12 @@
+session_path = 'D:\Dropbox\tACS_project_matlab_code\exampleData\subject_BL_desynch001';
+    
+[params_path, rest1_eeg_path, pre_stim_eeg_path, post_dur_stim_eeg_path, rest2_eeg_path, log_path] ...
+    = initialize(session_path)
+
+data = prepare_datafiles(session_path, params_path, rest1_eeg_path, pre_stim_eeg_path, ...
+    post_dur_stim_eeg_path, rest2_eeg_path)
+
+
 cfg_pre = [];
 cfg_pre.dataset = 'C:\project\EEG\subject_AF_desynch001\subject_AF_desynchS001R02.dat';
 cfg_pre.trialdef.triallength = 100;

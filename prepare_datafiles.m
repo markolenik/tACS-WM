@@ -1,4 +1,4 @@
-function data = prepare_datafiles(session, rest1_eeg, pre_stim_eeg, post_dur_stim_eeg, rest2_eeg)
+function data = prepare_datafiles(session_path, params_path, rest1_eeg_path, pre_stim_eeg_path, post_dur_stim_eeg_path, rest2_eeg_path)
 %PREPARE_DATAFILES Preprocessing of data, filtering etc.
 % 1. filter data
 % 2. ICA
@@ -10,37 +10,30 @@ function data = prepare_datafiles(session, rest1_eeg, pre_stim_eeg, post_dur_sti
 %   data = prepare_datafiles(session, params, rest1_eeg, pre_stim_eeg, post_dur_stim_eeg, rest2_eeg)
 %
 % INPUT
-%   (string) session:              path to session
-%   (string) rest1_eeg:            path to rest1 EEG file
-%   (string) pre_stim_eeg:         path to pre-stim EEG file
-%   (string) post_dur_stim_eeg:    path to post/during-stim EEG file
-%   (string) rest2_eeg:            path to rest2 EEG file
-%
+%   (string) session_path:              path to session
+%   (string) params_path:               path to params file
+%   (string) rest1_eeg_path:            path to rest 1 EEG file
+%   (string) pre_stim_eeg_path:         path to pre-stim EEG file
+%   (string) post_dur_stim_eeg_path:    path to post/during-stim EEG file
+%   (string) rest2_eeg_path:            path to rest 2 EEG file
+
 % OUTPUT
 %   (.mat) data: preprocessed data
 %
-% Expect params_file, pre_stim_eeg, post_dur_stim_eeg to be known after call
-% of initialize.m
-%     params_file         = [session_folder filesep subject,'_',condition,'.mat'];
-%     pre_stim_eeg        = [session_folder filesep subject,'_',condition,'S001R02.dat'];
-%     post_dur_stim_eeg   = [session_folder filesep subject,'_',condition,'S001R03.dat'];
-%
 
+% load params file
+load(params_path, 'params');
+log_path    = [session_path filesep 'log'];
 
-% params = ...
-
-read(params, 'params');
-
-
-params.paths.session_folder = session;
-params.paths.params_file = params;
-params.paths.pre_stim_eeg = pre_stim_eeg;
-params.paths.post_dur_stim_eeg = post_dur_stim_eeg;
+params.paths.session_folder = [session_path, filesep]; %NOTE: do we need that?
+params.paths.params_file = params_path;
+params.paths.pre_stim_eeg = pre_stim_eeg_path;
+params.paths.post_dur_stim_eeg = post_dur_stim_eeg_path;
 
 % loop through eeg files during task
-for file_path = {pre_stim_eeg, post_dur_stim_eeg}
+for file_path = {pre_stim_eeg_path, post_dur_stim_eeg_path}
     
-    data = read_datafile();
+    data = read_datafile(char(file_path), params, log_path);
     % apply filters XXXXXXXXXXXXX
     data = filtEEG(data);
     
@@ -58,9 +51,9 @@ for file_path = {pre_stim_eeg, post_dur_stim_eeg}
 end
 
 function trl_data = add_trialstruct()
-cfg = [];
-cfg.trl = definetrials(data, params);
-trl_data = ft_redefinetrial(cfg, data);
+    cfg = [];
+    cfg.trl = definetrials(data, params);
+    trl_data = ft_redefinetrial(cfg, data);
 end
 
 

@@ -13,13 +13,16 @@ log_file  = [log_path, filesep, 'log.txt'];
 
 % timestamp up to seconds precision
 timestamp = datestr(clock,'yyyy-mm-dd|HH:MM:SS');
+% name of computer that called the function
+comp_name = getenv('COMPUTERNAME');
+
 % create log.txt
 fid = fopen(log_file, 'at+');
 [ST,~] = dbstack;
 % write function that writes event
-fprintf(fid, '%s\n', [timestamp, ': "', ST(2).name, '.m" called']);
+fprintf(fid, '%s\n', [timestamp, '@', comp_name, ': "', ST(2).name, '.m" called']);
 % write event
-fprintf(fid, '%s\n', [timestamp, ': ', log_event]);
+fprintf(fid, '%s\n', [timestamp, '@', comp_name, ': ', log_event]);
 fclose(fid);
 
 end

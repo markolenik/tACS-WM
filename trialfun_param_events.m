@@ -29,7 +29,7 @@ EEGlength = hdr.nSamples;
 prms_prestim_start = params.Task.Trial(1).Timing.TrialStart;
 prms_prestim_end = params.TimeStamps.TaskPreStim.End;
 prms_dursim_start = 0;
-prms_poststim_end = params.TimeStamps.TaskPostStim.End - 
+prms_poststim_end = params.TimeStamps.TaskPostStim.End - %%NOTE: http://dai.ly/x6kqy
 
 
 % event structure

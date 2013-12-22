@@ -1,4 +1,4 @@
-function raw_data = read_datafile(file_path,params,log_path)
+function raw_data = read_datafile(file_path ,params, log_path)
 %READ_DATAFILE Read data from .dat-file and assign channel labels.
 %
 % SYNOPSIS

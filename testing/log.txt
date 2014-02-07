@@ -1,0 +1,16 @@
+2014-02-07|12:47:33@: "read_datafile.m" called
+2014-02-07|12:47:33@: succesfully read events from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R02.dat
+2014-02-07|12:47:34@: "read_datafile.m" called
+2014-02-07|12:47:34@: succesfully read data from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R02.dat
+2014-02-07|12:47:38@: "read_datafile.m" called
+2014-02-07|12:47:38@: succesfully read events from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R03.dat
+2014-02-07|12:47:41@: "read_datafile.m" called
+2014-02-07|12:47:41@: succesfully read data from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R03.dat
+2014-02-07|13:34:22@: "read_datafile.m" called
+2014-02-07|13:34:22@: succesfully read events from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R02.dat
+2014-02-07|13:34:23@: "read_datafile.m" called
+2014-02-07|13:34:23@: succesfully read data from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R02.dat
+2014-02-07|13:34:26@: "read_datafile.m" called
+2014-02-07|13:34:26@: succesfully read events from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R03.dat
+2014-02-07|13:34:29@: "read_datafile.m" called
+2014-02-07|13:34:29@: succesfully read data from /Users/mark/Documents/theta_tACS/exampleData/subject_BL_desynch001/subject_BL_desynchS001R03.dat

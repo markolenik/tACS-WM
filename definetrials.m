@@ -1,4 +1,4 @@
-function trl = definetrials(data, params)
+function trl = definetrials(data, params, dat_info)
 %DEFINETRIALS Define custom trials.
 %
 % SYNOPSIS
@@ -20,10 +20,12 @@ function trl = definetrials(data, params)
 % some more information about the trial (comments in embedded function)
 
 cfg = data.cfg;
-event = cfg.event;
-record = data.cfg.record;
+event = ft_fetch_event(data);
+record = dat_info.record;
 hdr = data.hdr;
 
+PRECUEDUR = 800; % we take 300ms + 500ms for window
+POSTCUEDUR = 1000; % we take 500ms + 500ms for window
 
 trl = [];
 % read out event 'task'
@@ -31,6 +33,7 @@ tasks = [event(find(strcmp('task', {event.type})))];
 for tsk = 1:length(tasks)
     begin_trial = tasks(tsk).sample;
     end_trial = begin_trial + tasks(tsk).duration;
+    % get all events for one trial
     tsk_events = event([event.sample]>=begin_trial);
     tsk_events = tsk_events([tsk_events.sample]<=end_trial);
     tsk_trial = create_trial(tsk, tsk_events, params, record, cfg);
@@ -42,15 +45,16 @@ end
 % create trials
     function trl = create_trial(tsk, tsk_events, params, record, cfg)
         
+        % true or false answer
         probe = [tsk_events(find(strcmp('probe',{tsk_events.type})))];
         
         trl = [];
         % begin
-        trl = [trl, probe.sample - 300];
+        trl = [trl, probe.sample - PRECUEDUR];
         % end
-        trl = [trl, probe.sample + 500];
+        trl = [trl, probe.sample + POSTCUEDUR];
         % offset
-        trl = [trl, -300];
+        trl = [trl, -PRECUEDUR];
         % RT
         trl = [trl, probe.duration];
         % value

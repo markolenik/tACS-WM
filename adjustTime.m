@@ -1,4 +1,4 @@
-function sample = adjustTime(prmsTimestamp,cfg)
+function sample = adjustTime(prmsTimestamp,cfg,dat_info)
 %ADJUSTTIME Map timepoint from DLDT to a sample in EEG data.
 %
 %   SYNOPSIS
@@ -22,10 +22,10 @@ function sample = adjustTime(prmsTimestamp,cfg)
 % read the header information without events from the data
 hdr   = ft_read_header(cfg.dataset);
 % record: prestim, dur/poststim
-record = cfg.record;
+record = dat_info.record;
 % sampling rate of EEG recording in ms
 FS = hdr.Fs;
-prms = cfg.params;
+prms = dat_info.params;
 eegLength = hdr.nSamples;
 
 % map time to samples

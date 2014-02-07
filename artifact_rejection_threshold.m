@@ -1,6 +1,9 @@
 function clean = artifact_rejection_threshold( data, params)
 %ARTIFACT_REJECTION_THRESHOLD Summary of this function goes here
+%TODO: add summary here
+%TODO: test function
 %   Detailed explanation goes here
+
     cfg = [];
     cfg.continuous = 'no';
     cfg.trl = data.cfg.trl;

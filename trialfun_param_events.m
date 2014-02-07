@@ -1,4 +1,4 @@
-function [trl, event] = trialfun_param_events(cfg);
+function [trl, event] = trialfun_param_events(cfg, dat_info);
 %TRIALFUN_PARAM_EVENTS Custom function for event definition.
 %
 % SYNOPSIS
@@ -17,12 +17,12 @@ function [trl, event] = trialfun_param_events(cfg);
 hdr   = ft_read_header(cfg.dataset);
 
 % record: prestim, dur/poststim
-record = cfg.record;
+record = dat_info.record;
 
 % sampling rate of EEG recording in ms
 FS = hdr.Fs;
 
-params = cfg.params;
+params = dat_info.params;
 
 % event structure
 % sample: sample number where event starts
@@ -30,28 +30,19 @@ params = cfg.params;
 % duration: in samples
 event = struct('type',{},'sample',{},'value',{},'offset',{},'duration',{});
 
-if(strcmp(record, 'pre_stim'))
-    analyze_params(1, 50);
-elseif(strcmp(record, 'dur_post_stim'))
-    analyze_params(51, 200);
-else
-    error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
-end
-
 trl = [1, hdr.nSamples, 0];
 
-% % Continuous data, 1 trial per recording (pre, dur and post)
-% if(strcmp(cfg.record, 'dur_post_stim'))
-%     start_dur_stim = params.TimeStamps.TaskDurStim.Start;
-%     end_post_stim = params.TimeStamps.TaskPostStim.End;
-%     trl = [adjustTime(start_dur_stim), adjustTime(end_post_stim),0];
-% elseif(strcmp(cfg.record, 'pre_stim'))
-%     start_pre_stim = params.TimeStamps.TaskPreStim.Start;
-%     end_pre_stim = params.TimeStamps.TaskPreStim.End;
-%     trl = [adjustTime(start_pre_stim), adjustTime(end_pre_stim), 0];
-% else
-%     error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
-% end
+% TODO: add comment
+switch record
+    case 'pre_stim'
+        analyze_params(1, 50); % pre-stim trials 1-50
+    case 'dur_post_stim'
+        analyze_params(51,200); % dur-stim trial 51-150, post-stim 151-200
+    case {'rest1', 'rest2'}
+        return;
+    otherwise
+        error('Wrong type of data, only task and rest data acceptale');
+end
 
 %% helper functions for event creation
 
@@ -80,7 +71,7 @@ trl = [1, hdr.nSamples, 0];
         %
         tsk_event = [];
         tsk_event.type = 'task';
-        tsk_event.sample = adjustTime(params.Task.Trial(1,x).Timing.Fixation.Start,cfg);
+        tsk_event.sample = adjustTime(params.Task.Trial(1,x).Timing.Fixation.Start,cfg,dat_info);
         tsk_event.value = [];
         tsk_event.offset = [];
         tsk_event.duration = floor( (params.Task.Trial(1,x).Timing.Probe.End - ...
@@ -94,7 +85,7 @@ trl = [1, hdr.nSamples, 0];
         %
         fxn_event = [];
         fxn_event.type = 'fixation';
-        fxn_event.sample = adjustTime(params.Task.Trial(1, x).Timing.Fixation.Start,cfg);
+        fxn_event.sample = adjustTime(params.Task.Trial(1, x).Timing.Fixation.Start,cfg,dat_info);
         fxn_event.value = [];
         fxn_event.offset = [];
         fxn_event.duration = floor( (params.Task.Trial(1,x).Timing.Fixation.End - ...
@@ -109,7 +100,7 @@ trl = [1, hdr.nSamples, 0];
         smpl_event = [];
         % number of presented sample (in terms of order number)
         smpl_event.type = ['sample', int2str(sample_num)];
-        smpl_event.sample = adjustTime(params.Task.Trial(1,x).Timing.Sample(sample_num).Start,cfg);
+        smpl_event.sample = adjustTime(params.Task.Trial(1,x).Timing.Sample(sample_num).Start,cfg, dat_info);
         % type of sample presented (1,2,3)
         smpl_event.value = params.Task.Trial(1, x).Samples(sample_num);
         smpl_event.offset = [];
@@ -125,7 +116,7 @@ trl = [1, hdr.nSamples, 0];
         msk_event = [];
         % number of presented mask (in terms of order number)
         msk_event.type = ['mask', int2str(mask_num)];
-        msk_event.sample = adjustTime(params.Task.Trial(1,x).Timing.Mask(mask_num).Start,cfg);
+        msk_event.sample = adjustTime(params.Task.Trial(1,x).Timing.Mask(mask_num).Start,cfg,dat_info);
         msk_event.value = [];
         msk_event.offset = [];
         msk_event.duration = floor( (params.Task.Trial(1,x).Timing.Mask(mask_num).End - ...
@@ -139,7 +130,7 @@ trl = [1, hdr.nSamples, 0];
         %
         cu_event = [];
         cu_event.type = 'cue';
-        cu_event.sample = adjustTime(params.Task.Trial(1, x).Timing.Cue.Start,cfg);
+        cu_event.sample = adjustTime(params.Task.Trial(1, x).Timing.Cue.Start,cfg,dat_info);
         cu_event.value = params.Task.Trial(1, x).Cue;
         cu_event.offset = [];
         cu_event.duration = floor( (params.Task.Trial(1,x).Timing.Cue.End - ...
@@ -153,13 +144,11 @@ trl = [1, hdr.nSamples, 0];
         %
         prb_event = [];
         prb_event.type = 'probe';
-        prb_event.sample = adjustTime(params.Task.Trial(1, x).Timing.Probe.Start,cfg);
+        prb_event.sample = adjustTime(params.Task.Trial(1, x).Timing.Probe.Start,cfg,dat_info);
         prb_event.value = (params.Task.Trial(1, x).Samples(params.Task.Trial(1, x).Cue) == params.Task.Trial(1, x).Probe) == ...
             params.Task.Trial(1, x).Response; % answered correctly?
         prb_event.offset = [];
         prb_event.duration = floor( params.Task.Trial(1, x).RT * FS );
     end
-
-
 
 end

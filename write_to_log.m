@@ -18,9 +18,6 @@ comp_name = getenv('COMPUTERNAME');
 
 % create log.txt
 fid = fopen(log_file, 'at+');
-[ST,~] = dbstack;
-% write function that writes event
-fprintf(fid, '%s\n', [timestamp, '@', comp_name, ': "', ST(2).name, '.m" called']);
 % write event
 fprintf(fid, '%s\n', [timestamp, '@', comp_name, ': ', log_event]);
 fclose(fid);

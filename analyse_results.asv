@@ -1,0 +1,197 @@
+%% INITIALIZE
+clc
+clear all
+% define paths as global variables
+MAIN_PATH = 'D:\ThesisData';
+%MAIN_PATH = '/Volumes/Transcend/ThesisData/';
+% add fieldtrip path
+addpath([MAIN_PATH filesep 'fieldtrip-20130901']);
+RESULT_PATH = [MAIN_PATH filesep 'RESULTS'];
+% add our functions
+FUNCTIONS_PATH = [MAIN_PATH filesep 'functions'];
+addpath(genpath(FUNCTIONS_PATH));
+% apply fieldtrip general fieldtrip settings
+ft_defaults;
+% go to path
+cd(FUNCTIONS_PATH);
+DATA_PATH = [MAIN_PATH filesep 'EEG'];
+
+%% LOAD FILES AND SAVE IMPORTANT DATA AGAIN
+% fail at CR => exclude for now
+subject_list = {'AF', 'AG', 'ArG', 'AT', 'BL', 'CS', 'DZ', 'FG',...
+    'ML', 'NP', 'SG', 'SP', 'VS', 'YM'};
+N = length(subject_list);
+for i = 1:N
+    temp(6).record = '';
+    count = 1;
+    fprintf('|');
+    subjectID = subject_list{i};
+    currentfolder = [RESULT_PATH filesep subjectID];
+    sessions = dir(currentfolder); sessions(1:2) = [];
+    sessions = {sessions.name};
+    cd(currentfolder);
+    for j = 1:length(sessions)
+        fprintf('.');
+        s = sessions{j};
+        currentsession = [currentfolder filesep s];
+        idx = strfind(s, '_');
+        condition = s(idx(1)+1:idx(2)-1);
+        record = s(idx(2)+1:strfind(s, '_wpli')-1);
+        load(s);
+        w = wpli;
+        temp(count).labelcmb = w.labelcmb; %#ok<*SAGROW>
+        temp(count).wpli = w.wpli_debiasedspctrm;
+        temp(count).freq = w.freq;
+        temp(count).time = w.time;
+        temp(count).trial = finaldat.trialinfo;
+        temp(count).ID = subjectID;
+        temp(count).condition = condition;
+        temp(count).record = record;
+        count = count + 1;
+    end
+    cd('..');
+    save([subjectID '_res.mat'], 'temp');
+    clear temp
+end
+
+%% LOAD AGAIN
+subject_list = {'AF', 'AG', 'ArG', 'AT', 'BL', 'CS', 'DZ', 'FG',...
+    'ML', 'NP', 'SG', 'SP', 'VS', 'YM'};
+N = length(subject_list);
+datlist = cell(N,6);
+for i = 1:N
+    subjectID = subject_list{i};
+    lis = ls([RESULT_PATH filesep subjectID filesep '*_result.mat']);
+    for j = 1:6
+        datlist{i,j} = importdata([RESULT_PATH filesep subjectID filesep lis(1,:)]);
+        fprintf('.');
+    end
+end
+%% Check number of trials left
+% find sessions where too much left
+
+trl = cellfun(@(x) max(size(x.trial)), datlist);
+indx = find(trl > 80);
+fprintf(num2str(indx));
+
+
+%% IDEA
+% calc mean for 200-400ms and 5-7 hz
+% compare to pre
+desynch_list_post = datlist(cellfun(@(x) strcmp(x.condition, 'desynch') ...
+                                && strcmp(x.record, 'dur_post_stim'), ...
+                                datlist));
+synch_list_post = datlist(cellfun(@(x) strcmp(x.condition, 'synch') ...
+                       && strcmp(x.record, 'dur_post_stim'), ...
+                                datlist));
+sham_list_post = datlist(cellfun(@(x) strcmp(x.condition, 'desynch') ...
+                                && strcmp(x.record, 'dur_post_stim'), ...
+                                datlist));
+
+desynch_list_pre = datlist(cellfun(@(x) strcmp(x.condition, 'desynch') ...
+                                && strcmp(x.record, 'pre_stim'), ...
+                                datlist));
+synch_list_pre = datlist(cellfun(@(x) strcmp(x.condition, 'synch') ...
+                       && strcmp(x.record, 'pre_stim'), ...
+                                datlist));
+sham_list_pre = datlist(cellfun(@(x) strcmp(x.condition, 'desynch') ...
+                                && strcmp(x.record, 'pre_stim'), ...
+                                datlist));
+%% try stats
+ds = cat(4,desynch_list(:).wpli);
+sham = cat(4,sham_list(:).wpli);
+s = cat(4,synch_list(:).wpli);
+
+ds = squeeze(ds(1,10:16,501:701,:));
+sham = squeeze(sham(1,10:16,501:701,:));
+s = squeeze(s(1,10:15,501:701,:));
+
+% scatter plot
+figure, hold on
+scatter(2*ones(length(m_desynch),1), m_desynch)
+scatter(ones(length(m_sham),1), m_sham)
+scatter(0*ones(length(m_synch),1), m_synch)
+scatter(2,mean(m_desynch), 100, 'd')
+scatter(1,mean(m_sham), 100, 'd')
+scatter(0,mean(m_synch), 100, 'd')
+ 
+
+%% PLOTS
+%% only post list
+
+desynch_list = datlist(arrayfun(@(x) strcmp(x.condition, 'desynch') ...
+                                && strcmp(x.record, 'dur_post_stim'), ...
+                                datlist));
+
+figure, title('desynch')
+for i = 1:14
+    subplot(2,7,i);
+    wpli = desynch_list(i);
+    surf(wpli.time, wpli.freq, ...
+         squeeze(wpli.wpli(1,:,:)),'edgecolor','none');
+    axis tight;
+    xlabel('Time'); ylabel('Hz');
+    view(2);
+end
+
+synch_list = datlist(arrayfun(@(x) strcmp(x.condition, 'synch') ...
+                       && strcmp(x.record, 'dur_post_stim'), ...
+                                datlist));
+figure, title('desynch')
+for i = 1:14
+    subplot(2,7,i);
+    wpli = synch_list(i);
+    surf(wpli.time, wpli.freq, ...
+         squeeze(wpli.wpli(1,:,:)),'edgecolor','none');
+    axis tight;
+    xlabel('Time'); ylabel('Hz');
+    view(2);
+end
+
+
+sham_list = datlist(arrayfun(@(x) strcmp(x.condition, 'sham') ...
+                       && strcmp(x.record, 'dur_post_stim'), ...
+                                datlist));
+
+figure, title('desynch')
+for i = 1:14
+    subplot(2,7,i);
+    wpli = sham_list(i);
+    surf(wpli.time, wpli.freq, ...
+         squeeze(wpli.wpli(1,:,:)),'edgecolor','none');
+    axis tight;
+    xlabel('Time'); ylabel('Hz');
+    view(2);
+end
+
+%% plot mean wpli
+desynch_mean = mean(cat(4,desynch_list(:).wpli), 4);
+sham_mean = mean(cat(4,sham_list(:).wpli), 4);
+synch_mean = mean(cat(4,synch_list(:).wpli), 4);
+
+figure
+subplot(3,1,1);
+title('desynch');
+surf(desynch_list(i).time, sham_list(i).freq, squeeze(desynch_mean(1,:,:)), ...
+     'edgecolor','none');
+    xlabel('Time'); ylabel('Hz');
+    view(2);
+    caxis([0 0.3]);
+    colorbar
+subplot(3,1,2);
+title('sham');
+surf(sham_list(i).time, sham_list(i).freq, squeeze(sham_mean(1,:,:)), ...
+     'edgecolor','none');
+    xlabel('Time'); ylabel('Hz');
+    view(2);
+    colorbar
+    caxis([0 0.3]);
+subplot(3,1,3);
+title('synch');
+surf(synch_list(i).time, sham_list(i).freq, squeeze(synch_mean(1,:,:)), ...
+     'edgecolor','none');
+xlabel('Time'); ylabel('Hz');
+view(2);
+colorbar
+caxis([0 0.3]);
+

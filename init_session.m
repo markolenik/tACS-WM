@@ -12,12 +12,12 @@ function [params_path, rest1_eeg_path, pre_stim_eeg_path, post_dur_stim_eeg_path
 %   (string)  session_path: path to folder that contains the parameter file  (as .mat) and all EEG files (rest1, pre_stim, post_stim, rest2 at .dat)
 %
 % OUPUT
-%   (string)  params_path:               path to params file
-%   (string)  rest1_eeg_path:            path to rest 1 EEG file
-%   (string)  pre_stim_eeg_path:         path to pre-stim EEG file
+%   (string)  params_path:                    path to params file
+%   (string)  rest1_eeg_path:                 path to rest 1 EEG file
+%   (string)  pre_stim_eeg_path:            path to pre-stim EEG file
 %   (string)  post_dur_stim_eeg_path:    path to post/during-stim EEG file
-%   (string)  rest2_eeg_path:            path to rest 2 EEG file
-%   (string)  log_path                   path to logfile
+%   (string)  rest2_eeg_path:                 path to rest 2 EEG file
+%   (string)  log_path                            path to logfile
 
 % get subject ID
 folder      = session_path(strfind(session_path, 'subject_'):end);
@@ -48,12 +48,16 @@ pre_stim_eeg_path        = [session_path filesep 'subject' '_' subjectID,'_',con
 post_dur_stim_eeg_path   = [session_path filesep 'subject' '_' subjectID,'_',condition,'S001R03.dat'];
 rest2_eeg           = [session_path filesep 'subject' '_' subjectID,'_',condition,'S001R04.dat'];
 
+% check for log file and delete if exists
+mkdir(log_path);
+if(exist([log_path filesep 'log.txt']))
+    delete([log_path filesep 'log.txt']);
+end
 % check whether all objects exist
 if(exist(params_path, 'file') && exist(pre_stim_eeg_path, 'file') && ...
         exist(post_dur_stim_eeg_path, 'file') && exist(rest1_eeg_path, 'file') ...
         && exist(rest2_eeg, 'file'))
     % create log folder
-    mkdir(log_path);
     write_to_log(log_path, ['successfully initialized session ', '"', condition, '"', ' for subject ', '"', subjectID, '"']);
     success = true;
 else

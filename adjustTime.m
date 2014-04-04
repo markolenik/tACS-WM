@@ -1,14 +1,15 @@
-function sample = adjustTime(prmsTimestamp,cfg,dat_info)
+function sample = adjustTime(prmsTimestamp, hdr, record, params)
 %ADJUSTTIME Map timepoint from DLDT to a sample in EEG data.
 %
 %   SYNOPSIS
-%       movedSample = adjustTime(prmsTimestamp,prms,cfg)
+%       movedSample = adjustTime(prmsTimestamp, hdr, record, params)
 %
 %   INPUT
 %       (number) prmsTimestamp: time point from task to shift
-%       (struct) prms:          params file
-%       (struct) eegData:       file with EEG data
-%
+%       (struct) hdr:         header file
+%       (string) record:      recording type
+%       (string) params:  parameter file
+% 
 %   OUPUT
 %       (number) sample: shifted sample
 %
@@ -19,22 +20,17 @@ function sample = adjustTime(prmsTimestamp,cfg,dat_info)
 %   recording lengths.
 %
 
-% read the header information without events from the data
-hdr   = ft_read_header(cfg.dataset);
-% record: prestim, dur/poststim
-record = dat_info.record;
 % sampling rate of EEG recording in ms
 FS = hdr.Fs;
-prms = dat_info.params;
 eegLength = hdr.nSamples;
 
 % map time to samples
 if(strcmp(record, 'dur_post_stim'))
 %     prms_end = prms.TimeStamps.Experiment.End - ...
 %         prms.Task.Trial(51).Timing.TrialStart;
-    prms_end = prms.TimeStamps.Experiment.End * FS;
+    prms_end = params.TimeStamps.Experiment.End * FS;
 elseif(strcmp(record, 'pre_stim'))
-    prms_end = prms.TimeStamps.TaskPreStim.End * FS;
+    prms_end = params.TimeStamps.TaskPreStim.End * FS;
 else
     error('Wrong type of data, only "pre_stim" and "dur_post_stim" acceptale');
 end

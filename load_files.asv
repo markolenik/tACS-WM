@@ -1,0 +1,12 @@
+function [data, params] = load_files( session_folder, step )
+%LOAD_FILES Assembles the files saved after [step] from [session_folder/log/]
+%   files to load are:
+%       - data
+%       - params
+
+    load( [session_folder, filesep, 'log', filesep, 'saved_workspace_', step, '.mat'], ...
+        'data', 'params' );
+    write_to_log( 'C:\project', ['loaded files for ', step] );
+
+end
+

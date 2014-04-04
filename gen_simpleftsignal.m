@@ -3,7 +3,6 @@ function [simplesignal] = gen_simpleftsignal(fsample,trllength,...
 % generate fieldtripsignal from input vector
 % vararg: fsample, trllength, numtrl, 
 
-% TODO: if nargin...
 
 cfg = [];
 
@@ -26,7 +25,6 @@ cfg.numtrl = numtrl;
 simplesignal = ft_freqsimulation(cfg);
 
 end
-%NOTE: params muesste dann noch hinzugefuegt werden zu cfg nach dem output
 
 
 

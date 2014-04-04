@@ -1,9 +1,9 @@
-function [raw_data, dat_info] = read_datafile(file_path ,params, log_path)
+function [raw_dat, record] = read_datafile(file_path, params)
 %READ_DATAFILE Read data from .dat-file and assign channel labels. Leave
 %data as a single trial.
 %
 % SYNOPSIS
-%   [raw_data dat_info] = read_datafile(file_path,params,log_path)
+%   [raw_data dat_info] = read_datafile(file_path,params)
 %
 % INPUT
 %   (string) log_path:   path to log file
@@ -12,15 +12,8 @@ function [raw_data, dat_info] = read_datafile(file_path ,params, log_path)
 %
 % OUTPUT
 %   (struct) raw_data:   loaded data with channel labels.
-%   (struct) dat_info: struct containig important information like record
-%   etc.
-%
+%   (struct) record: type of recording
 
-if(nargin<3)
-    log_path = pwd;
-end
-
-dat_info = [];
 
 cfg = [];
 cfg.dataset = file_path;
@@ -38,22 +31,15 @@ switch(record_code)
     otherwise
         error('Wrong record_code');
 end
-dat_info.record = record; % NOTE: really bad idea to use the cfg to save data
-dat_info.params = params;
 
-cfg.trialfun = @(cfg) trialfun_param_events(cfg,dat_info); % one trial, all events
-
+cfg.trialfun = @(cfg) trialfun_param_events(cfg,record, params, file_path);
 cfg = ft_definetrial(cfg);
-write_to_log(log_path, ['succesfully read events from ', file_path]);
-cfg.continuous = 'yes';
 
-
-raw_data = ft_preprocessing(cfg);
-write_to_log(log_path, ['succesfully read data from ', file_path]);
+raw_dat = ft_preprocessing(cfg);
 
 % set channel names in data
-raw_data.label = {'Fp1','Fp2', ...
-    'F7','F3','Fz','F4','F8', ... 
+raw_dat.label = {'Fp1','Fp2', ...
+    'F7','F3','Fz','F4','F8', ...
     'FC5','FC1','FC2','FC6', ...
     'T7','C3','Cz','C4','T8', ...
     'TP9', ...

@@ -1,29 +1,21 @@
-function defaults = m_defaults
+% m_defaults
 
-% script to run to initialize paths etc...
-%TODO: more comment pls
-
-clear all,
-
-% main folder
-global main_path;
-main_path = '/Users/mark/Documents/theta_tACS';
+clear all
+% define paths as global variables
+global MAIN_PATH DESYNCH_PATH SHAM_PATH SYNCH_PATH;
+MAIN_PATH = '/Users/mark/Documents/theta_tACS';
 % add fieldtrip path
-addpath([main_path filesep 'fieldtrip-20130901']);
+addpath([MAIN_PATH filesep 'fieldtrip-20130901']);
 % add our functions
-addpath(genpath([main_path filesep 'functions']));
+addpath(genpath([MAIN_PATH filesep 'functions']));
 % apply fieldtrip general fieldtrip settings
 ft_defaults;
 
 % add session path
-global session_path;
-% session_path = [main_path filesep 'exampleData' filesep 'subject_BL_desynch001'];
-% session_path = [main_path filesep 'exampleData' filesep 'subject_BL_sham001'];
-session_path = [main_path filesep 'exampleData' filesep 'subject_BL_synch001'];
+DESYNCH_PATH = [MAIN_PATH filesep 'exampleData' filesep 'subject_BL_desynch001'];
+SHAM_PATH = [MAIN_PATH filesep 'exampleData' filesep 'subject_BL_sham001'];
+SYNCH_PATH = [MAIN_PATH filesep 'exampleData' filesep 'subject_BL_synch001'];
+
+cd '/Users/mark/Documents/theta_tACS/functions';
 
 
-% if global variables don't work, generate output
-defaults.mainPath = main_path;
-defaults.sessionPath = session_path;
-
-end

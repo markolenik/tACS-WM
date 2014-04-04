@@ -1,4 +1,4 @@
-function data = filtEEG(data)
+function data = filtEEG(data, freq)
 %FILTEEG Filter EEG data from noise.
 %
 % SYNOPSIS
@@ -6,47 +6,21 @@ function data = filtEEG(data)
 %
 % INPUT
 %   (struct) data: continuous data (1 trial) to prevent bias
+%   (string) filepath: path to dataset
 %
 % OUPUT
-%   (struct) clean: filtered data
+%   (struct) data: filtered data
 %
 
-% cfg = [];
-% cfg.hpfilter = 'yes';
-% cfg.hpfreq = 1;
-% cfg.hpfiltdir = 'twopass';
-% cfg.hpfilttype = 'firls';
-% % NOTE: why does it take so long?
-% cfg.lpfilter = 'yes';
-% cfg.lpfreq = 100;
-% cfg.lpfiltdir = 'twopass';
-% cfg.lpfilttype = 'firls';
-% cfg.bsfilter = 'yes';
-% cfg.bsfreq = [46 54];
-% cfg.bsfiltdir = 'twopass';
-% cfg.bsfilttype = 'firls';
-
-
 cfg = [];
-cfg.hpfilter = 'yes';
-cfg.hpfreq = 1;
-% cfg.hpfiltdir = 'twopass';
-% cfg.hpfilttype = 'firls';
-% NOTE: why does it take so long?
-cfg.lpfilter = 'yes';
-cfg.lpfreq = 25;
-% cfg.lpfiltdir = 'twopass';
-% cfg.lpfilttype = 'firls';
-cfg.bsfilter = 'yes';
-cfg.bsfreq = [46 54];
-% cfg.bsfiltdir = 'twopass';
-% cfg.bsfilttype = 'firls';
-
+cfg.bpfilter = 'yes';
+cfg.bpfreq = freq;
+cfg.bpdir = 'twopass';
+cfg.bptype = 'fir';
+cfg.continuous = 'yes';
 cfg.detrend = 'yes';
-cfg.channel = {'all'};
+cfg.channel = 'all';
 
 data = ft_preprocessing(cfg, data);
-% NOTE: uncomment later
-% write_to_log(session_path, ['succesfully filtered data from ', data.cfg.dataset]);
 
 end

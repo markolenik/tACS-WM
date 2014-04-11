@@ -23,8 +23,8 @@ hdr = data.hdr;
 
 % For WPLI only time in [-300ms 500ms] range of cue will be considered.
 % But we take a bigger trialwindow for better frequency resolution
-PRECUEDUR = 1500; % we take 300ms + 1200ms for window
-POSTCUEDUR = 1500; % we take 500ms + 1000ms for window
+PRECUEDUR = 3000; % we take 300ms + 1200ms for window
+POSTCUEDUR = 5000; % we take 500ms + 1000ms for window
 
 trl = [];
 % read out event 'task'

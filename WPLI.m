@@ -17,7 +17,7 @@ cfg.taper     = 'hanning';
 cfg.output    = 'powandcsd';
 cfg.keeptrials = 'yes';
 cfg.foi = freq(1):0.1:freq(2);
-cfg.toi = -1.5:0.001:1.5;
+cfg.toi = -1.5:0.001:2;
 cfg.t_ftimwin = ones(length(cfg.foi),1) .*2;
 
 cfg.channel = {'F3','P3','F5','P5'};

@@ -30,7 +30,8 @@ MAIN_PATH = 'D:\ThesisData';
 addpath([MAIN_PATH filesep 'fieldtrip-20130901']);
 RESULT_PATH = [MAIN_PATH filesep 'RESULTS'];
 % add our functions
-FUNCTIONS_PATH = [MAIN_PATH filesep 'functions'];
+%FUNCTIONS_PATH = [MAIN_PATH filesep 'functions'];
+FUNCTIONS_PATH = '\\ads.bris.ac.uk\filestore\MyFiles\Students\mo13924\Documents\GitHub\tACS-WM';
 addpath(genpath(FUNCTIONS_PATH));
 % apply fieldtrip general fieldtrip settings
 ft_defaults;
@@ -40,7 +41,10 @@ DATA_PATH = [MAIN_PATH filesep 'EEG'];
 
 %% LOOP SUBJECTS
 % exclude CR for now, sth went wrong here
-subject_list = {'AF', 'AG', 'ArG', 'AT', 'BL', 'CS', 'DZ', 'FG',...
+%subject_list = {'AF', 'AG', 'ArG', 'AT', 'BL', 'CS', 'DZ', 'FG',...
+%    'ML', 'NP', 'SG', 'SP', 'VS', 'YM'};
+
+subject_list = {'FG',...
     'ML', 'NP', 'SG', 'SP', 'VS', 'YM'};
 N = length(subject_list);
 

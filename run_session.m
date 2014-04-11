@@ -11,7 +11,7 @@ end
 
 % filter
 try
-    fdat = filtEEG(raw_dat, [5,7]);
+    fdat = filtEEG(raw_dat, [1,20]);
     write_to_log(logpath, ['successfully filtered data from ' filepath]);
 catch
     write_to_log(logpath, ['error in filtering data from ' filepath]);
@@ -55,7 +55,7 @@ finaldat = rejdat;
 
 % calculate WPLI
 try
-    stat = WPLI(finaldat, [5,7]);
+    stat = WPLI(finaldat, [1,20]);
     % 	wpli = squeeze(stat.wpli_debiasedspctrm);
     write_to_log(logpath, ['successfully calculated WPLI on ', filepath]);
 catch

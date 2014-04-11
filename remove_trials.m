@@ -3,7 +3,7 @@ function clean = remove_trials(dat, record, condition)
 %analysis.
 %   - trials that were answered wrong
 %   - trials with a reaction time > 2*stddev. (stddev calculated over the session)
-%   - trials with peak-to-peak amplitudes of either <2uV or >100uV
+%   - trials with peak-to-peak amplitudes of either <2uV or >200uV
 %
 % SYNOPSIS
 %   clean = remove_trials( data, record )

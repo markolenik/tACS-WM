@@ -39,7 +39,7 @@ cd(FUNCTIONS_PATH);
 DATA_PATH = [MAIN_PATH filesep 'EEG'];
 
 %% LOOP SUBJECTS
-% exclude CR for now
+% exclude CR for now, sth went wrong here
 subject_list = {'AF', 'AG', 'ArG', 'AT', 'BL', 'CS', 'DZ', 'FG',...
     'ML', 'NP', 'SG', 'SP', 'VS', 'YM'};
 N = length(subject_list);

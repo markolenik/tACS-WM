@@ -101,10 +101,8 @@ scatter(0*ones(length(mean_synch_post - mean_synch_pre),1), mean_synch_post - me
 title('post - pre');
 
 %% ANOVA
-sham = [mean_sham_pre', mean_sham_post'];
-synch = [mean_synch_pre', mean_synch_post'];
-desynch = [mean_desynch_pre', mean_desynch_post'];
-[p, table] = anova_rm({synch, sham, desynch});
+
+[p, table] = anova_rm(
 
 
 %% PLOTS

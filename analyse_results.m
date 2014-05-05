@@ -116,58 +116,20 @@ for i = 1:14
     surf(wpli.time, wpli.freq, ...
          squeeze(wpli.wpli_debiasedspctrm(1,:,:)),'edgecolor','none');
     axis tight;
-    xlabel('Time'); ylabel('Hz');
+    xlabel(desynch_list_post(i).ID); ylabel('Hz');
     view(2);
 end
 
-
-
-
-desynch_list = datlist(arrayfun(@(x) strcmp(x.condition, 'desynch') ...
-                                && strcmp(x.record, 'dur_post_stim'), ...
-                                datlist));
-
-figure, title('desynch')
+figure, title('synch_post')
 for i = 1:14
     subplot(2,7,i);
-    wpli = desynch_list(i);
+    wpli = synch_list_post(i).wpli;
     surf(wpli.time, wpli.freq, ...
-         squeeze(wpli.wpli(1,:,:)),'edgecolor','none');
+         squeeze(wpli.wpli_debiasedspctrm(1,:,:)),'edgecolor','none');
     axis tight;
     xlabel('Time'); ylabel('Hz');
     view(2);
 end
-
-synch_list = datlist(arrayfun(@(x) strcmp(x.condition, 'synch') ...
-                       && strcmp(x.record, 'dur_post_stim'), ...
-                                datlist));
-figure, title('desynch')
-for i = 1:14
-    subplot(2,7,i);
-    wpli = synch_list(i);
-    surf(wpli.time, wpli.freq, ...
-         squeeze(wpli.wpli(1,:,:)),'edgecolor','none');
-    axis tight;
-    xlabel('Time'); ylabel('Hz');
-    view(2);
-end
-
-
-sham_list = datlist(arrayfun(@(x) strcmp(x.condition, 'sham') ...
-                       && strcmp(x.record, 'dur_post_stim'), ...
-                                datlist));
-
-figure, title('desynch')
-for i = 1:14
-    subplot(2,7,i);
-    wpli = sham_list(i);
-    surf(wpli.time, wpli.freq, ...
-         squeeze(wpli.wpli(1,:,:)),'edgecolor','none');
-    axis tight;
-    xlabel('Time'); ylabel('Hz');
-    view(2);
-end
-
 %% plot mean wpli
 desynch_mean = mean(cat(4,desynch_list(:).wpli), 4);
 sham_mean = mean(cat(4,sham_list(:).wpli), 4);
